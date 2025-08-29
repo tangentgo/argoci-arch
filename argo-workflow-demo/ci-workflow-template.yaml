@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-build-template # template name
+  namespace: argo
+spec:
+  entrypoint: build-and-push
+  serviceAccountName: argo-workflow # A service account with the necessary permissions is required
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: docker-registry-secret # Reference the secret we just created
+        items:
+          - key: .dockerconfigjson
+            path: config.json
+  arguments:
+    parameters:
+      - name: git-repo-url # Git repository address, provided by Argo Events
+      - name: git-revision # Git commit ID, provided by Argo Events
+      - name: image-url   # The image address to be pushed, provided by Argo Events
+
+  templates:
+    - name: build-and-push
+      inputs:
+        artifacts:
+          - name: source-code
+            path: /src
+            git:
+              repo: "{{workflow.parameters.git-repo-url}}"
+              revision: "{{workflow.parameters.git-revision}}"
+      container:
+        image: gcr.io/kaniko-project/executor:v1.9.0 # 
+        command: [/kaniko/executor]
+        args:
+          - "--dockerfile=/src/Dockerfile"
+          - "--context=dir:///src/"
+          - "--destination={{workflow.parameters.image-url}}:{{workflow.parameters.git-revision}}"
+        volumeMounts:
+          - name: docker-config
+            mountPath: /kaniko/.docker/ # Kaniko will automatically read the authentication information from this path
