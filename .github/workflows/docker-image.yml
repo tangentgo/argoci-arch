@@ -28,8 +28,8 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./argo-workflow-demo
-        file: ./argo-workflow-demo/Dockerfile
+        context: ./argocd-demo
+        file: ./argocd-demo/Dockerfile
         push: true
         tags: |
           fengyuxiu/argo-demo:latest
