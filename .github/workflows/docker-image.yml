@@ -26,5 +26,17 @@ jobs:
         file: ./argo-workflow-demo/Dockerfile
         push: true
         tags: |
-          myuser/argo-demo:latest
-          myuser/argo-demo:${{ github.sha }}
+          fengyuxiu/argo-demo:latest
+          fengyuxiu/argo-demo:${{ github.sha }}
+
+    - name: Update Kubernetes manifests with new image
+      if: github.event_name == 'push'
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+        sed -i "s|image: fengyuxiu/argo-demo:.*|image: fengyuxiu/argo-demo:${{ github.sha }}|" ./deploy/deploy.yaml
+
+        git add ./deploy/deploy.yaml
+        git commit -m "Update image to fengyuxiu/argo-demo:${{ github.sha }}" || echo "No changes to commit"
+        git push
