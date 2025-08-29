@@ -26,5 +26,5 @@ jobs:
         file: ./argo-workflow-demo/Dockerfile
         push: true
         tags: |
-          myuser/argo-demo:latest
-          myuser/argo-demo:${{ github.sha }}
+          fengyuxiu/argo-demo:latest
+          fengyuxiu/argo-demo:${{ github.sha }}
