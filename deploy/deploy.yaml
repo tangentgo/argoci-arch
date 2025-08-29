@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: argo-demo
-        image: fengyuxiu/argo-demo:6b19f4c70e2fe8bbf0d67ca28180e021e9270949
+        image: fengyuxiu/argo-demo:218400ed3a412fa4565810a1047fe8a7a2c0c6b9
         ports:
         - containerPort: 8080
         resources:
