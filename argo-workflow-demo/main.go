@@ -7,7 +7,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Received request")
+	log.Println("Received request !!")
 	fmt.Fprintf(w, "Hello from Argo Workflows CI!")
 }
 
